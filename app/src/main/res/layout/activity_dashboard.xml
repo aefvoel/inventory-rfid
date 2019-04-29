@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/intersection"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:background="@color/colorAccent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/polygon"
+            android:scaleType="fitXY"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <ImageView
+            android:id="@+id/logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_logout"
+            android:padding="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Halo,"
+            android:textAlignment="textEnd"
+            android:textColor="@color/colorWhite"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/txt_user" />
+        <TextView
+            android:id="@+id/txt_user"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="User"
+            android:textAlignment="textEnd"
+            android:textColor="@color/colorWhite"
+            android:padding="4dp"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/qr"
+        android:layout_width="wrap_content"
+        android:layout_height="120dp"
+        android:layout_marginTop="40dp"
+        app:cardCornerRadius="8dp"
+        app:contentPadding="14dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/history"
+        app:layout_constraintTop_toBottomOf="@id/intersection">
+        <ImageView
+            android:id="@+id/btnQr"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:padding="12dp"
+            android:src="@drawable/ic_qr"
+            android:layout_gravity="start"/>
+        <TextView
+            android:layout_width="64dp"
+            android:layout_height="wrap_content"
+            android:text="Scan"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:layout_gravity="bottom|start"
+            android:textColor="@color/colorText"/>
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/history"
+        android:layout_width="wrap_content"
+        android:layout_height="120dp"
+        android:layout_marginTop="40dp"
+        app:cardCornerRadius="8dp"
+        app:contentPadding="14dp"
+        app:layout_constraintEnd_toStartOf="@id/info"
+        app:layout_constraintStart_toEndOf="@id/qr"
+        app:layout_constraintTop_toBottomOf="@id/intersection">
+        <ImageView
+            android:id="@+id/btnHistory"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:padding="12dp"
+            android:src="@drawable/ic_history"
+            android:layout_gravity="end"/>
+        <TextView
+            android:layout_width="64dp"
+            android:layout_height="wrap_content"
+            android:text="History"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:layout_gravity="bottom|end"
+            android:textColor="@color/colorText"/>
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/info"
+        android:layout_width="wrap_content"
+        android:layout_height="120dp"
+        android:layout_marginTop="40dp"
+        app:cardCornerRadius="8dp"
+        app:contentPadding="14dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/history"
+        app:layout_constraintTop_toBottomOf="@id/intersection">
+        <ImageView
+            android:id="@+id/btnInfo"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:padding="12dp"
+            android:src="@drawable/ic_product"
+            android:layout_gravity="end"/>
+        <TextView
+            android:layout_width="64dp"
+            android:layout_height="wrap_content"
+            android:text="Product"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:layout_gravity="bottom|end"
+            android:textColor="@color/colorText"/>
+
+    </android.support.v7.widget.CardView>
+
+
+</android.support.constraint.ConstraintLayout>

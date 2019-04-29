@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "555644028577",
+    "firebase_url": "https://dashboard-rfid.firebaseio.com",
+    "project_id": "dashboard-rfid",
+    "storage_bucket": "dashboard-rfid.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:555644028577:android:c18f7da979e01cf5",
+        "android_client_info": {
+          "package_name": "id.toriq.project.rfid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "555644028577-e4onq1fdor5km48nqtv89gk9i010692v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "id.toriq.project.rfid",
+            "certificate_hash": "c2ce0776c55a34efa5a96f7c0c6a28ee89391f87"
+          }
+        },
+        {
+          "client_id": "555644028577-jigl4v3gecg66nduh4q7gigg8vvkstgd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlU41SH-y91opbNHK9No2Y53qUgUOpNss"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "555644028577-jigl4v3gecg66nduh4q7gigg8vvkstgd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
