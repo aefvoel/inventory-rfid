@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
-        android:text="Scan Products"
+        android:text="Register Products"
         android:textColor="@color/colorWhite"
         android:textStyle="bold"
         android:textSize="16dp"
@@ -105,7 +105,7 @@
                 android:id="@+id/date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="8dp"
+                android:padding="4dp"
                 android:text="Date"
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -115,7 +115,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="DATE"
-                android:padding="8dp"
+                android:padding="4dp"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 app:layout_constraintBaseline_toBaselineOf="@id/date"
@@ -124,7 +124,7 @@
                 android:id="@+id/product"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="8dp"
+                android:padding="4dp"
                 android:text="Product Scanned"
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -134,12 +134,58 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="PROD"
-                android:padding="8dp"
+                android:padding="4dp"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 app:layout_constraintBaseline_toBaselineOf="@id/product"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/layout_artikel"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/product">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/etArtikel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Kode Artikel"
+                    android:inputType="text"
+                    android:textColor="@color/colorText"
+                    android:textColorHint="@color/colorHint"
+                    android:textSize="14sp" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:id="@+id/spinner_ukuran"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/product"/>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/layout_ukuran"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/product">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/etUkuran"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Ukuran"
+                    android:inputType="text"
+                    android:focusable="false"
+                    android:textColor="@color/colorText"
+                    android:textColorHint="@color/colorHint"
+                    android:textSize="14sp" />
+
+            </android.support.design.widget.TextInputLayout>
             <Button
                 android:id="@+id/btnSubmit"
                 android:layout_width="wrap_content"
@@ -149,7 +195,7 @@
                 android:textColor="@color/colorWhite"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/txt_product" />
+                app:layout_constraintTop_toBottomOf="@id/layout_ukuran" />
 
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>

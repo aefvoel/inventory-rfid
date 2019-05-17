@@ -8,8 +8,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,11 +37,13 @@ public class ProductActivity extends AppCompatActivity
 {
     private DatabaseReference mDatabase;
     public RFIDWithUHF mReader;
+    private ScanListAdapter routineListAdapter;
+
+    @BindView(R.id.search_view)
+    SearchView searchView;
 
     @BindView(R.id.product_list)
     RecyclerView scanList;
-    @BindView(R.id.txt_stock)
-    TextView txtStock;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +51,27 @@ public class ProductActivity extends AppCompatActivity
         setContentView(R.layout.activity_product);
         ButterKnife.bind(this);
         displayData();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                try {
+                    routineListAdapter.filter(query);
+                } catch (NullPointerException e){
+                    Utils.ToastMessage(getApplicationContext(), "data not found");
+                }
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                try {
+                    routineListAdapter.filter(newText);
+                } catch (NullPointerException e){
+                    Utils.ToastMessage(getApplicationContext(), "data not found");
+                }
+                return true;
+            }
+        });
     }
     @OnClick(R.id.fab_add)
     public void onFabClick(){
@@ -82,32 +108,16 @@ public class ProductActivity extends AppCompatActivity
                     DataList value = dataSnapshot1.getValue(DataList.class);
                     DataList data = new DataList();
                     String rfid = value.getRfid();
-                    String jenisBaju = value.getJenisBaju();
+                    String kodeArtikel = value.getKodeArtikel();
                     String ukuran = value.getUkuran();
-                    String warna = value.getWarna();
-                    String brand = value.getBrand();
-                    String production = value.getProduction();
-                    String supervisor1 = value.getSupervisor1();
-                    String supervisor2 = value.getSupervisor2();
-                    String qc = value.getQc();
                     String lastUpdate = value.getLastUpdate();
                     String petugas = value.getPetugas();
-                    String sku = value.getSku();
-                    String proDate = value.getProductionDate();
 
                     data.setRfid(rfid);
-                    data.setJenisBaju(jenisBaju);
                     data.setUkuran(ukuran);
-                    data.setWarna(warna);
-                    data.setBrand(brand);
-                    data.setProduction(production);
-                    data.setSupervisor1(supervisor1);
-                    data.setSupervisor2(supervisor2);
-                    data.setQc(qc);
                     data.setLastUpdate(lastUpdate);
                     data.setPetugas(petugas);
-                    data.setSku(sku);
-                    data.setProductionDate(proDate);
+                    data.setKodeArtikel(kodeArtikel);
                     dataList.add(data);
 
                 }
@@ -115,7 +125,7 @@ public class ProductActivity extends AppCompatActivity
 
                 GridLayoutManager mGridLayoutManager = new GridLayoutManager(getApplicationContext(), 1);
                 scanList.setLayoutManager(mGridLayoutManager);
-                ScanListAdapter routineListAdapter = new ScanListAdapter(dataList, getApplicationContext(), item -> {
+                routineListAdapter = new ScanListAdapter(dataList, getApplicationContext(), item -> {
                     try {
                         WriteTagFragment newFragment = WriteTagFragment.newInstance(prepareList(item));
                         newFragment.show(getDialogFragment(), "dialog_fragment_teacher_detail");
@@ -124,7 +134,7 @@ public class ProductActivity extends AppCompatActivity
                     }
                 });
                 scanList.setAdapter(routineListAdapter);
-                txtStock.setText(String.valueOf(dataList.size()));
+                searchView.setQueryHint("search " + dataList.size() + " product ...");
             }
 
             @Override
@@ -138,16 +148,10 @@ public class ProductActivity extends AppCompatActivity
     public ArrayList<String> prepareList(DataList data) {
         ArrayList<String> value = new ArrayList<>();
         value.add(data.getRfid());
-        value.add(data.getJenisBaju());
+        value.add(data.getKodeArtikel());
+        value.add(data.getLastUpdate());
         value.add(data.getUkuran());
-        value.add(data.getWarna());
-        value.add(data.getBrand());
-        value.add(data.getProduction());
-        value.add(data.getSupervisor1());
-        value.add(data.getSupervisor2());
-        value.add(data.getQc());
-        value.add(data.getSku());
-        value.add(data.getProductionDate());
+        value.add(data.getPetugas());
 
         return value;
     }

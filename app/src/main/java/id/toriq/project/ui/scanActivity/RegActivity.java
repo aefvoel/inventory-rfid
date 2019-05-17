@@ -42,7 +42,7 @@ import id.toriq.project.model.DataList;
 import id.toriq.project.model.InfoList;
 
 
-public class ScanActivity extends KeyDown {
+public class RegActivity extends KeyDown {
 
     private boolean loopFlag = false;
     Handler handler;
@@ -66,6 +66,16 @@ public class ScanActivity extends KeyDown {
     @BindView(R.id.card_scan)
     CardView cardScan;
 
+    @BindView(R.id.etArtikel)
+    EditText etArtikel;
+    @BindView(R.id.etUkuran)
+    EditText etUkuran;
+    @BindView(R.id.spinner_ukuran)
+    MaterialSpinner spinnerUkuran;
+
+    private String[] size = {"", "AS", "S", "M", "L", "XL", "XXL"};
+
+    private HashMap<String, String> map;
     private DatabaseReference mDatabase;
     private SharedPreferences sharedPreferences;
     private RFIDWithUHF mReader;
@@ -76,14 +86,23 @@ public class ScanActivity extends KeyDown {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_scan);
+        setContentView(R.layout.activity_reg);
         ButterKnife.bind(this);
         dataList = new ArrayList<>();
 
-        mypDialog = new ProgressDialog(ScanActivity.this);
+        mypDialog = new ProgressDialog(RegActivity.this);
         mypDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         mypDialog.setMessage("Scanning");
         mypDialog.setCanceledOnTouchOutside(false);
+        etUkuran.setText(size[1]);
+        spinnerUkuran.setItems(size);
+        spinnerUkuran.setOnItemSelectedListener((MaterialSpinner.OnItemSelectedListener<String>) (view12, position, id, item) -> {
+            etUkuran.setText(item);
+            spinnerUkuran.setSelectedIndex(0);
+        });
+        etUkuran.setOnClickListener(v -> {
+            spinnerUkuran.expand();
+        });
 
         cardInfo.setVisibility(View.INVISIBLE);
         cardScan.setVisibility(View.INVISIBLE);
@@ -112,7 +131,7 @@ public class ScanActivity extends KeyDown {
 //                "E200001A310102152400C2CF",
 //                "E200001A310102152140C25B",
 //                "E200001A310102152240C28F",
-//                "E200001A310102152290C293",
+//                "E28011700000020A88110BC0",
 //                "E200001A310102152390C2C7",
 //                "E200001A310102152460C2DB",
 //                "E200001A310102152560C30F",
@@ -133,30 +152,34 @@ public class ScanActivity extends KeyDown {
 
     @OnClick(R.id.btnSubmit)
     public void onSubmitInfo() {
-        for (int i = 0; i < dataList.size(); i++) {
-            DataList data = new DataList(dataList.get(i).getRfid(), dataList.get(i).getKodeArtikel(),
-                    dataList.get(i).getUkuran(), txtDate.getText().toString(), sharedPreferences.getString(Constant.NAMA, ""));
-            mDatabase = FirebaseDatabase.getInstance().getReference("data-product-scanned").child(dataList.get(i).getRfid());
-            mDatabase.setValue(data)
+        if (etArtikel.getText().toString().equals("") || etUkuran.getText().toString().equals("")) {
+            Utils.ToastMessage(getApplicationContext(), "Form tidak boleh kosong!");
+        } else {
+            for (int i = 0; i < dataList.size(); i++) {
+                DataList data = new DataList(dataList.get(i).getRfid(), etArtikel.getText().toString(),
+                        etUkuran.getText().toString(), txtDate.getText().toString(), sharedPreferences.getString(Constant.NAMA, ""));
+                mDatabase = FirebaseDatabase.getInstance().getReference("data-product-registered").child(dataList.get(i).getRfid());
+                mDatabase.setValue(data)
+                        .addOnSuccessListener(aVoid -> {
+                            // Write was successful!
+                        })
+                        .addOnFailureListener(e -> {
+                            // Write failed
+                            Utils.ToastMessage(getApplicationContext(), e.getMessage());
+                        });
+            }
+            InfoList data = new InfoList(txtDate.getText().toString(), sharedPreferences.getString(Constant.NAMA, ""), txtProduct.getText().toString());
+            mDatabase = FirebaseDatabase.getInstance().getReference("history");
+            mDatabase.push().setValue(data)
                     .addOnSuccessListener(aVoid -> {
                         // Write was successful!
+                        Utils.ToastMessage(getApplicationContext(), "Data Stored Successfully");
                     })
                     .addOnFailureListener(e -> {
                         // Write failed
                         Utils.ToastMessage(getApplicationContext(), e.getMessage());
                     });
         }
-        InfoList data = new InfoList(txtDate.getText().toString(), sharedPreferences.getString(Constant.NAMA, ""), txtProduct.getText().toString());
-        mDatabase = FirebaseDatabase.getInstance().getReference("history");
-        mDatabase.push().setValue(data)
-                .addOnSuccessListener(aVoid -> {
-                    // Write was successful!
-                    Utils.ToastMessage(getApplicationContext(), "Data Stored Successfully");
-                })
-                .addOnFailureListener(e -> {
-                    // Write failed
-                    Utils.ToastMessage(getApplicationContext(), e.getMessage());
-                });
 
     }
 
@@ -180,23 +203,32 @@ public class ScanActivity extends KeyDown {
                 if (!isExist(epc)) {
                     if (dataSnapshot.exists()) {
 
-                        //Key exists
-                        DataList value = dataSnapshot.getChildren().iterator().next().getValue(DataList.class);
+//                        //Key exists
+//                        DataList value = dataSnapshot.getChildren().iterator().next().getValue(DataList.class);
+//
+//                        String rfid = value.getRfid();
+//                        String kodeArtikel = value.getKodeArtikel();
+//                        String ukuran = value.getUkuran();
+//                        String lastUpdate = value.getLastUpdate();
+//                        String petugas = value.getPetugas();
+//
+//
+//                        data.setRfid(rfid);
+//                        data.setKodeArtikel(kodeArtikel);
+//                        data.setUkuran(ukuran);
+//                        data.setLastUpdate(lastUpdate);
+//                        data.setPetugas(petugas);
+//                        dataList.add(data);
 
-                        String rfid = value.getRfid();
-                        String kodeArtikel = value.getKodeArtikel();
-                        String ukuran = value.getUkuran();
-                        String lastUpdate = value.getLastUpdate();
-                        String petugas = value.getPetugas();
-
-
-                        data.setRfid(rfid);
-                        data.setKodeArtikel(kodeArtikel);
-                        data.setUkuran(ukuran);
-                        data.setLastUpdate(lastUpdate);
-                        data.setPetugas(petugas);
+                    } else {
+                        //Key does not exist
+                        data.setRfid(epc);
+                        data.setKodeArtikel("");
+                        data.setUkuran("");
+                        data.setLastUpdate("");
+                        data.setPetugas("");
                         dataList.add(data);
-
+                        Log.w("stock", "data not found.");
                     }
                     GridLayoutManager mGridLayoutManager = new GridLayoutManager(getApplicationContext(), 1);
                     scanList.setLayoutManager(mGridLayoutManager);
@@ -344,7 +376,7 @@ public class ScanActivity extends KeyDown {
             mypDialog.cancel();
 
             if (!result) {
-                Toast.makeText(ScanActivity.this, "init fail",
+                Toast.makeText(RegActivity.this, "init fail",
                         Toast.LENGTH_SHORT).show();
             }
         }
@@ -354,7 +386,7 @@ public class ScanActivity extends KeyDown {
             // TODO Auto-generated method stub
             super.onPreExecute();
 
-            mypDialog = new ProgressDialog(ScanActivity.this);
+            mypDialog = new ProgressDialog(RegActivity.this);
             mypDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             mypDialog.setMessage("init...");
             mypDialog.setCanceledOnTouchOutside(false);

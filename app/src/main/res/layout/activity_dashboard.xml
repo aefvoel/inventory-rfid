@@ -74,12 +74,12 @@
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:padding="12dp"
-            android:src="@drawable/ic_qr"
+            android:src="@drawable/ic_history"
             android:layout_gravity="start"/>
         <TextView
             android:layout_width="64dp"
             android:layout_height="wrap_content"
-            android:text="Scan"
+            android:text="Register"
             android:textSize="12sp"
             android:textStyle="bold"
             android:textAlignment="center"
@@ -103,12 +103,12 @@
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:padding="12dp"
-            android:src="@drawable/ic_history"
+            android:src="@drawable/ic_qr"
             android:layout_gravity="end"/>
         <TextView
             android:layout_width="64dp"
             android:layout_height="wrap_content"
-            android:text="History"
+            android:text="Scan"
             android:textSize="12sp"
             android:textStyle="bold"
             android:textAlignment="center"

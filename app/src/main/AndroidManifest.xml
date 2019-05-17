@@ -41,6 +41,11 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:noHistory="true"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name="id.toriq.project.ui.scanActivity.RegActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:noHistory="true"
+            android:screenOrientation="portrait"/>
         <activity android:name="id.toriq.project.ui.productActivity.ProductActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:noHistory="true"

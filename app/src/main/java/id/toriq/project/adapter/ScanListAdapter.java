@@ -8,7 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import id.toriq.project.R;
 import id.toriq.project.model.DataList;
@@ -18,6 +20,7 @@ public class ScanListAdapter extends RecyclerView.Adapter<ScanListAdapter.ViewHo
         void onItemClick(DataList item);
     }
     private final List<DataList> routineDataList;
+    private final List<DataList> mFilteredList;
     private final LayoutInflater mLayoutInflater;
     private final ScanListAdapter.OnItemClickListener listener;
     private final Context mContext;
@@ -27,6 +30,7 @@ public class ScanListAdapter extends RecyclerView.Adapter<ScanListAdapter.ViewHo
         this.listener = listener;
         this.mContext = mContext;
         mLayoutInflater = LayoutInflater.from(mContext);
+        this.mFilteredList = new ArrayList<>();
         notifyDataSetChanged();
     }
 
@@ -40,6 +44,21 @@ public class ScanListAdapter extends RecyclerView.Adapter<ScanListAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         viewHolder.bind(routineDataList.get(i), listener);
+    }
+    public void filter(String charText) {
+        charText = charText.toLowerCase(Locale.getDefault());
+        mFilteredList.addAll(routineDataList);
+        routineDataList.clear();
+        if (charText.length() == 0) {
+            routineDataList.addAll(mFilteredList);
+        } else {
+            for (DataList data : mFilteredList) {
+                if (data.getRfid().toLowerCase().contains(charText) || data.getKodeArtikel().toLowerCase().contains(charText) || data.getLastUpdate().toLowerCase().contains(charText)) {
+                    routineDataList.add(data);
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 
     @Override
@@ -61,9 +80,10 @@ public class ScanListAdapter extends RecyclerView.Adapter<ScanListAdapter.ViewHo
         }
         public void bind(final DataList item, final OnItemClickListener listener) {
 
-            subject.setText(item.getBrand());
-            subjectName.setText(item.getJenisBaju());
-            subjectTime.setText(item.getRfid());
+            subjectInit.setText(item.getUkuran());
+            subject.setText(item.getKodeArtikel());
+            subjectName.setText(item.getRfid());
+            subjectTime.setText(item.getLastUpdate());
             if(subject.getText().equals("")){
                 subjectInit.setBackgroundColor(mContext.getResources().getColor(R.color.colorText));
             }

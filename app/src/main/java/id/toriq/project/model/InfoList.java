@@ -20,8 +20,7 @@ public class InfoList {
     public InfoList() {
     }
 
-    public InfoList(String artikel, String lastUpdate, String petugas, String products) {
-        this.artikel = artikel;
+    public InfoList(String lastUpdate, String petugas, String products) {
         this.lastUpdate = lastUpdate;
         this.petugas = petugas;
         this.products = products;

@@ -58,30 +58,8 @@ public class WriteTagFragment extends DialogFragment {
     ImageView closeBtn;
     @BindView(R.id.etJenisBaju)
     EditText etJenisBaju;
-    @BindView(R.id.etBrand)
-    EditText etBrand;
     @BindView(R.id.tap_rfid)
     TextView etRfid;
-    @BindView(R.id.etUkuran)
-    EditText etUkuran;
-    @BindView(R.id.etProduction)
-    EditText etProduction;
-    @BindView(R.id.etQc)
-    EditText etQc;
-    @BindView(R.id.etWarna)
-    EditText etWarna;
-    @BindView(R.id.etSup1)
-    EditText etSup1;
-    @BindView(R.id.etSup2)
-    EditText etSup2;
-    @BindView(R.id.etSku)
-    EditText etSku;
-    @BindView(R.id.etProdDate)
-    EditText etProDate;
-    @BindView(R.id.spinner_ukuran)
-    MaterialSpinner spinnerUkuran;
-    @BindView(R.id.spinner_warna)
-    MaterialSpinner spinnerWarna;
 
     private DatabaseReference databaseReference;
     private static SharedPreferences sharedPreferences;
@@ -131,23 +109,7 @@ public class WriteTagFragment extends DialogFragment {
         setCancelable(false);
         closeBtn.setOnClickListener(onClickListenerDialogClose);
         initUHF();
-        spinnerUkuran.setItems(size);
-        spinnerUkuran.setOnItemSelectedListener((MaterialSpinner.OnItemSelectedListener<String>) (view12, position, id, item) -> {
-            etUkuran.setText(item);
-            spinnerUkuran.setSelectedIndex(0);
-        });
-        etUkuran.setOnClickListener(v -> {
-            spinnerUkuran.expand();
-        });
 
-        spinnerWarna.setItems(warna);
-        spinnerWarna.setOnItemSelectedListener((MaterialSpinner.OnItemSelectedListener<String>) (view12, position, id, item) -> {
-            etWarna.setText(item);
-            spinnerWarna.setSelectedIndex(0);
-        });
-        etWarna.setOnClickListener(v -> {
-            spinnerWarna.expand();
-        });
 
         myCalendar = Calendar.getInstance();
         DatePickerDialog.OnDateSetListener date = (view1, year, monthOfYear, dayOfMonth) -> {
@@ -157,24 +119,10 @@ public class WriteTagFragment extends DialogFragment {
             myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
             updateLabel();
         };
-        etProDate.setOnClickListener(v -> {
-            // TODO Auto-generated method stub
-            new DatePickerDialog(getContext(), date, myCalendar
-                    .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                    myCalendar.get(Calendar.DAY_OF_MONTH)).show();
-        });
+
         if (getArguments() != null) {
             etRfid.setText(getArguments().getStringArrayList(Constant.ARG_VALUE).get(0));
             etJenisBaju.setText(getArguments().getStringArrayList(Constant.ARG_VALUE).get(1));
-            etUkuran.setText(getArguments().getStringArrayList(Constant.ARG_VALUE).get(2));
-            etWarna.setText(getArguments().getStringArrayList(Constant.ARG_VALUE).get(3));
-            etBrand.setText(getArguments().getStringArrayList(Constant.ARG_VALUE).get(4));
-            etProduction.setText(getArguments().getStringArrayList(Constant.ARG_VALUE).get(5));
-            etSup1.setText(getArguments().getStringArrayList(Constant.ARG_VALUE).get(6));
-            etSup2.setText(getArguments().getStringArrayList(Constant.ARG_VALUE).get(7));
-            etQc.setText(getArguments().getStringArrayList(Constant.ARG_VALUE).get(8));
-            etSku.setText(getArguments().getStringArrayList(Constant.ARG_VALUE).get(9));
-            etProDate.setText(getArguments().getStringArrayList(Constant.ARG_VALUE).get(10));
 
 
         }
@@ -186,7 +134,6 @@ public class WriteTagFragment extends DialogFragment {
         String myFormat = "dd/MM/yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat);
 
-        etProDate.setText(sdf.format(myCalendar.getTime()));
     }
 
     private final View.OnClickListener onClickListenerDialogClose = view -> dismiss();
@@ -203,15 +150,6 @@ public class WriteTagFragment extends DialogFragment {
             // User is signed in
             writeToDB(etRfid.getText().toString(),
                     etJenisBaju.getText().toString(),
-                    etUkuran.getText().toString(),
-                    etWarna.getText().toString(),
-                    etBrand.getText().toString(),
-                    etProduction.getText().toString(),
-                    etSup1.getText().toString(),
-                    etSup2.getText().toString(),
-                    etQc.getText().toString(),
-                    etSku.getText().toString(),
-                    etProDate.getText().toString(),
                     Utils.getCurrentTimeStamp(),
                     sharedPreferences.getString(Constant.NAMA, ""));
         } else {
@@ -221,11 +159,9 @@ public class WriteTagFragment extends DialogFragment {
 
     }
 
-    private void writeToDB(String rfid, String jenisBaju, String ukuran, String warna, String brand,
-                           String production, String supervisor1, String supervisor2, String qc, String sku, String productionDate,
+    private void writeToDB(String rfid, String kodeArtikel,
                            String lastUpdate, String petugas) {
-        DataList dataList = new DataList(rfid, jenisBaju, ukuran, warna, brand, production,
-                supervisor1, supervisor2, qc, sku, productionDate, lastUpdate, petugas);
+        DataList dataList = new DataList(rfid, kodeArtikel, lastUpdate, petugas);
         databaseReference = FirebaseDatabase.getInstance().getReference();
         databaseReference.child("data").child(rfid).setValue(dataList)
                 .addOnSuccessListener(aVoid -> {
@@ -275,31 +211,15 @@ public class WriteTagFragment extends DialogFragment {
                     DataList value = dataSnapshot.getChildren().iterator().next().getValue(DataList.class);
 
                     String rfid = value.getRfid();
-                    String jenisBaju = value.getJenisBaju();
+                    String jenisBaju = value.getKodeArtikel();
                     String ukuran = value.getUkuran();
-                    String warna = value.getWarna();
-                    String brand = value.getBrand();
-                    String production = value.getProduction();
-                    String supervisor1 = value.getSupervisor1();
-                    String supervisor2 = value.getSupervisor2();
-                    String qc = value.getQc();
                     String lastUpdate = value.getLastUpdate();
                     String petugas = value.getPetugas();
-                    String sku = value.getSku();
-                    String proDate = value.getProductionDate();
 
 
                     etRfid.setText(rfid);
                     etJenisBaju.setText(jenisBaju);
-                    etUkuran.setText(ukuran);
-                    etWarna.setText(warna);
-                    etBrand.setText(brand);
-                    etProduction.setText(production);
-                    etSup1.setText(supervisor1);
-                    etSup2.setText(supervisor2);
-                    etQc.setText(qc);
-                    etSku.setText(sku);
-                    etProDate.setText(proDate);
+
                     Log.w("stock", "data found." + warna);
 
                 } else {
