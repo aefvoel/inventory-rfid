@@ -31,6 +31,7 @@ public class ScanListAdapter extends RecyclerView.Adapter<ScanListAdapter.ViewHo
         this.mContext = mContext;
         mLayoutInflater = LayoutInflater.from(mContext);
         this.mFilteredList = new ArrayList<>();
+        mFilteredList.addAll(routineDataList);
         notifyDataSetChanged();
     }
 
@@ -47,9 +48,8 @@ public class ScanListAdapter extends RecyclerView.Adapter<ScanListAdapter.ViewHo
     }
     public void filter(String charText) {
         charText = charText.toLowerCase(Locale.getDefault());
-        mFilteredList.addAll(routineDataList);
         routineDataList.clear();
-        if (charText.length() == 0) {
+        if (charText.isEmpty()) {
             routineDataList.addAll(mFilteredList);
         } else {
             for (DataList data : mFilteredList) {

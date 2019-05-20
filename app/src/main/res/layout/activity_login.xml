@@ -94,13 +94,12 @@
 
             <Button
                 android:id="@+id/login_button"
-                android:layout_width="64dp"
+                android:layout_width="80dp"
                 android:layout_height="64dp"
                 android:layout_margin="12dp"
                 android:background="@drawable/menu_oval"
                 android:text="Login"
                 android:textColor="@color/colorWhite"
-                android:textStyle="bold"
                 app:layout_constraintTop_toBottomOf="@id/layout_pass"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />

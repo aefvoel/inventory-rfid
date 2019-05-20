@@ -31,6 +31,7 @@ import id.toriq.project.R;
 import id.toriq.project.adapter.ScanListAdapter;
 import id.toriq.project.helper.Utils;
 import id.toriq.project.model.DataList;
+import id.toriq.project.ui.scanActivity.ScanActivity;
 import id.toriq.project.ui.scanActivity.WriteTagFragment;
 
 public class ProductActivity extends AppCompatActivity
@@ -38,6 +39,8 @@ public class ProductActivity extends AppCompatActivity
     private DatabaseReference mDatabase;
     public RFIDWithUHF mReader;
     private ScanListAdapter routineListAdapter;
+    private List<DataList> dataList;
+    private ProgressDialog mypDialog;
 
     @BindView(R.id.search_view)
     SearchView searchView;
@@ -50,6 +53,10 @@ public class ProductActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product);
         ButterKnife.bind(this);
+        mypDialog = new ProgressDialog(ProductActivity.this);
+        mypDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mypDialog.setMessage("Retrieving Data");
+        mypDialog.setCanceledOnTouchOutside(false);
         displayData();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -94,14 +101,14 @@ public class ProductActivity extends AppCompatActivity
     }
 
     private void displayData(){
+        mypDialog.show();
         mDatabase = FirebaseDatabase.getInstance().getReference("data");
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
 
-                List<DataList> dataList = new ArrayList<>();
-                List<String> stringList = new ArrayList<>();
+                dataList = new ArrayList<>();
 
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
 
@@ -135,11 +142,12 @@ public class ProductActivity extends AppCompatActivity
                 });
                 scanList.setAdapter(routineListAdapter);
                 searchView.setQueryHint("search " + dataList.size() + " product ...");
+                mypDialog.dismiss();
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-// Failed to read value
+                mypDialog.dismiss();
                 Log.w("Hello", "Failed to read value.", databaseError.toException());
             }
         });

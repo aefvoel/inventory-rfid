@@ -142,6 +142,7 @@ public class RegActivity extends KeyDown {
 //
 //        }
     }
+
     @OnClick(R.id.btnClear)
     public void onClear() {
         dataList.clear();
@@ -290,18 +291,14 @@ public class RegActivity extends KeyDown {
 
 
     private void readTag() {
-        if (BtInventory.getText().equals("Tap to Scan")) {
-            if (mReader.startInventoryTag(0, 0)) {
-                BtInventory.setText("Tap to Stop");
-                BtInventory.setIconTint(getResources().getColorStateList(R.color.colorRed));
-                loopFlag = true;
-                new TagThread().start();
-            } else {
-                mReader.stopInventory();
-                Toast.makeText(this, "fail", Toast.LENGTH_LONG).show();
-            }
+        if (mReader.startInventoryTag(0, 0)) {
+            BtInventory.setText("Tap to Stop");
+            BtInventory.setIconTint(getResources().getColorStateList(R.color.colorRed));
+            loopFlag = true;
+            new TagThread().start();
         } else {
-            stopInventory();
+            mReader.stopInventory();
+            Toast.makeText(this, "fail", Toast.LENGTH_LONG).show();
         }
     }
 
