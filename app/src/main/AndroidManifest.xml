@@ -17,8 +17,7 @@
         <activity
             android:screenOrientation="portrait"
             android:name="id.toriq.project.ui.loginActivity.LoginActivity"
-            android:theme="@style/AppTheme.Launcher"
-            android:noHistory="false">
+            android:theme="@style/AppTheme.Launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -27,32 +26,33 @@
         <activity
             android:name="id.toriq.project.ui.mainActivity.DashboardActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:noHistory="false"
             android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="id.toriq.project.ui.mainActivity.MainActivity"
             android:label="Pengumuman dan Informasi"
-            android:noHistory="false"
             android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="id.toriq.project.ui.scanActivity.ScanActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:noHistory="true"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name="id.toriq.project.ui.scanActivity.ScanAllActivity"
+            android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"/>
         <activity
             android:name="id.toriq.project.ui.scanActivity.RegActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:noHistory="true"
             android:screenOrientation="portrait"/>
         <activity android:name="id.toriq.project.ui.productActivity.ProductActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:noHistory="true"
+            android:screenOrientation="portrait"/>
+        <activity android:name="id.toriq.project.ui.productActivity.CompareActivity"
+            android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"/>
         <activity android:name="id.toriq.project.ui.historyActivity.HistoryActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:noHistory="true"
             android:screenOrientation="portrait"/>
     </application>
 

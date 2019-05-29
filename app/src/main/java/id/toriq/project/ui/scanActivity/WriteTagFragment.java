@@ -58,6 +58,12 @@ public class WriteTagFragment extends DialogFragment {
     ImageView closeBtn;
     @BindView(R.id.etJenisBaju)
     EditText etJenisBaju;
+    @BindView(R.id.etUkuran)
+    EditText etUkuran;
+    @BindView(R.id.etUpdate)
+    EditText etUpdate;
+    @BindView(R.id.etPetugas)
+    EditText etPetugas;
     @BindView(R.id.tap_rfid)
     TextView etRfid;
 
@@ -108,7 +114,7 @@ public class WriteTagFragment extends DialogFragment {
         setStyle(DialogFragment.STYLE_NORMAL, 0);
         setCancelable(false);
         closeBtn.setOnClickListener(onClickListenerDialogClose);
-        initUHF();
+//        initUHF();
 
 
         myCalendar = Calendar.getInstance();
@@ -123,6 +129,9 @@ public class WriteTagFragment extends DialogFragment {
         if (getArguments() != null) {
             etRfid.setText(getArguments().getStringArrayList(Constant.ARG_VALUE).get(0));
             etJenisBaju.setText(getArguments().getStringArrayList(Constant.ARG_VALUE).get(1));
+            etUkuran.setText(getArguments().getStringArrayList(Constant.ARG_VALUE).get(2));
+            etUpdate.setText(getArguments().getStringArrayList(Constant.ARG_VALUE).get(3));
+            etPetugas.setText(getArguments().getStringArrayList(Constant.ARG_VALUE).get(4));
 
 
         }
@@ -138,26 +147,26 @@ public class WriteTagFragment extends DialogFragment {
 
     private final View.OnClickListener onClickListenerDialogClose = view -> dismiss();
 
-    @OnClick(R.id.btnScan)
-    public void onScan() {
-        readRFID();
-    }
-
-    @OnClick(R.id.btnSubmit)
-    public void onSubmit() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            // User is signed in
-            writeToDB(etRfid.getText().toString(),
-                    etJenisBaju.getText().toString(),
-                    Utils.getCurrentTimeStamp(),
-                    sharedPreferences.getString(Constant.NAMA, ""));
-        } else {
-            // No user is signed in
-            Utils.ToastMessage(getContext(), "Auth failed");
-        }
-
-    }
+//    @OnClick(R.id.btnScan)
+//    public void onScan() {
+//        readRFID();
+//    }
+//
+//    @OnClick(R.id.btnSubmit)
+//    public void onSubmit() {
+//        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+//        if (user != null) {
+//            // User is signed in
+//            writeToDB(etRfid.getText().toString(),
+//                    etJenisBaju.getText().toString(),
+//                    Utils.getCurrentTimeStamp(),
+//                    sharedPreferences.getString(Constant.NAMA, ""));
+//        } else {
+//            // No user is signed in
+//            Utils.ToastMessage(getContext(), "Auth failed");
+//        }
+//
+//    }
 
     private void writeToDB(String rfid, String kodeArtikel,
                            String lastUpdate, String petugas) {

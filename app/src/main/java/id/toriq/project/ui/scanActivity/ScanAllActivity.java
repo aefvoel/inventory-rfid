@@ -13,7 +13,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,11 +21,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.rscja.deviceapi.RFIDWithUHF;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -42,7 +39,7 @@ import id.toriq.project.model.DataList;
 import id.toriq.project.model.InfoList;
 
 
-public class RegActivity extends KeyDown {
+public class ScanAllActivity extends KeyDown {
 
     private boolean loopFlag = false;
     Handler handler;
@@ -53,7 +50,6 @@ public class RegActivity extends KeyDown {
 
     @BindView(R.id.btnScan)
     MaterialButton btScan;
-
     @BindView(R.id.btnStop)
     MaterialButton btStop;
 
@@ -69,17 +65,6 @@ public class RegActivity extends KeyDown {
     @BindView(R.id.card_scan)
     CardView cardScan;
 
-    @BindView(R.id.etArtikel)
-    EditText etArtikel;
-    @BindView(R.id.etUkuran)
-    EditText etUkuran;
-    @BindView(R.id.spinner_ukuran)
-    MaterialSpinner spinnerUkuran;
-
-
-    private String[] size = {"", "AS", "S", "M", "L", "XL", "XXL"};
-
-    private HashMap<String, String> map;
     private DatabaseReference mDatabase;
     private SharedPreferences sharedPreferences;
     private RFIDWithUHF mReader;
@@ -90,23 +75,14 @@ public class RegActivity extends KeyDown {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reg);
+        setContentView(R.layout.activity_scan_all);
         ButterKnife.bind(this);
         dataList = new ArrayList<>();
 
-        mypDialog = new ProgressDialog(RegActivity.this);
+        mypDialog = new ProgressDialog(ScanAllActivity.this);
         mypDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         mypDialog.setMessage("Scanning");
         mypDialog.setCanceledOnTouchOutside(false);
-        etUkuran.setText(size[1]);
-        spinnerUkuran.setItems(size);
-        spinnerUkuran.setOnItemSelectedListener((MaterialSpinner.OnItemSelectedListener<String>) (view12, position, id, item) -> {
-            etUkuran.setText(item);
-            spinnerUkuran.setSelectedIndex(0);
-        });
-        etUkuran.setOnClickListener(v -> {
-            spinnerUkuran.expand();
-        });
 
         cardInfo.setVisibility(View.INVISIBLE);
         cardScan.setVisibility(View.INVISIBLE);
@@ -139,7 +115,10 @@ public class RegActivity extends KeyDown {
 //                "E200001A310102152390C2C7",
 //                "E200001A310102152460C2DB",
 //                "E200001A310102152560C30F",
-//                "E200001A310102152570C303"
+//                "E200001A310102152570C303",
+//                "E28011700000020A88114AE6",
+//                "E28011700000020A88114BE4",
+//                "E28011700000020A881142F9"
 //        };
 //        for (int i = 0; i < title.length; i++) {
 //            displayData(title[i]);
@@ -162,34 +141,30 @@ public class RegActivity extends KeyDown {
 
     @OnClick(R.id.btnSubmit)
     public void onSubmitInfo() {
-        if (etArtikel.getText().toString().equals("") || etUkuran.getText().toString().equals("")) {
-            Utils.ToastMessage(getApplicationContext(), "Form tidak boleh kosong!");
-        } else {
-            for (int i = 0; i < dataList.size(); i++) {
-                DataList data = new DataList(dataList.get(i).getRfid(), etArtikel.getText().toString(),
-                        etUkuran.getText().toString(), txtDate.getText().toString(), sharedPreferences.getString(Constant.NAMA, ""));
-                mDatabase = FirebaseDatabase.getInstance().getReference("data-product-registered").child(dataList.get(i).getRfid());
-                mDatabase.setValue(data)
-                        .addOnSuccessListener(aVoid -> {
-                            // Write was successful!
-                        })
-                        .addOnFailureListener(e -> {
-                            // Write failed
-                            Utils.ToastMessage(getApplicationContext(), e.getMessage());
-                        });
-            }
-            InfoList data = new InfoList(txtDate.getText().toString(), sharedPreferences.getString(Constant.NAMA, ""), txtProduct.getText().toString());
-            mDatabase = FirebaseDatabase.getInstance().getReference("history");
-            mDatabase.push().setValue(data)
+        for (int i = 0; i < dataList.size(); i++) {
+            DataList data = new DataList(dataList.get(i).getRfid(), dataList.get(i).getKodeArtikel(),
+                    dataList.get(i).getUkuran(), txtDate.getText().toString(), sharedPreferences.getString(Constant.NAMA, ""));
+            mDatabase = FirebaseDatabase.getInstance().getReference("data-product-scanned-all").child(dataList.get(i).getRfid());
+            mDatabase.setValue(data)
                     .addOnSuccessListener(aVoid -> {
                         // Write was successful!
-                        Utils.ToastMessage(getApplicationContext(), "Data Stored Successfully");
                     })
                     .addOnFailureListener(e -> {
                         // Write failed
                         Utils.ToastMessage(getApplicationContext(), e.getMessage());
                     });
         }
+        InfoList data = new InfoList(txtDate.getText().toString(), sharedPreferences.getString(Constant.NAMA, ""), txtProduct.getText().toString());
+        mDatabase = FirebaseDatabase.getInstance().getReference("history");
+        mDatabase.push().setValue(data)
+                .addOnSuccessListener(aVoid -> {
+                    // Write was successful!
+                    Utils.ToastMessage(getApplicationContext(), "Data Stored Successfully");
+                })
+                .addOnFailureListener(e -> {
+                    // Write failed
+                    Utils.ToastMessage(getApplicationContext(), e.getMessage());
+                });
 
     }
 
@@ -213,24 +188,24 @@ public class RegActivity extends KeyDown {
                 if (!isExist(epc)) {
                     if (dataSnapshot.exists()) {
 
-//                        //Key exists
-//                        DataList value = dataSnapshot.getChildren().iterator().next().getValue(DataList.class);
-//
-//                        String rfid = value.getRfid();
-//                        String kodeArtikel = value.getKodeArtikel();
-//                        String ukuran = value.getUkuran();
-//                        String lastUpdate = value.getLastUpdate();
-//                        String petugas = value.getPetugas();
-//
-//
-//                        data.setRfid(rfid);
-//                        data.setKodeArtikel(kodeArtikel);
-//                        data.setUkuran(ukuran);
-//                        data.setLastUpdate(lastUpdate);
-//                        data.setPetugas(petugas);
-//                        dataList.add(data);
+                        //Key exists
+                        DataList value = dataSnapshot.getChildren().iterator().next().getValue(DataList.class);
 
-                    } else {
+                        String rfid = value.getRfid();
+                        String kodeArtikel = value.getKodeArtikel();
+                        String ukuran = value.getUkuran();
+                        String lastUpdate = value.getLastUpdate();
+                        String petugas = value.getPetugas();
+
+
+                        data.setRfid(rfid);
+                        data.setKodeArtikel(kodeArtikel);
+                        data.setUkuran(ukuran);
+                        data.setLastUpdate(lastUpdate);
+                        data.setPetugas(petugas);
+                        dataList.add(data);
+
+                    }else {
                         //Key does not exist
                         data.setRfid(epc);
                         data.setKodeArtikel("");
@@ -379,7 +354,7 @@ public class RegActivity extends KeyDown {
             mypDialog.cancel();
 
             if (!result) {
-                Toast.makeText(RegActivity.this, "init fail",
+                Toast.makeText(ScanAllActivity.this, "init fail",
                         Toast.LENGTH_SHORT).show();
             }
         }
@@ -389,7 +364,7 @@ public class RegActivity extends KeyDown {
             // TODO Auto-generated method stub
             super.onPreExecute();
 
-            mypDialog = new ProgressDialog(RegActivity.this);
+            mypDialog = new ProgressDialog(ScanAllActivity.this);
             mypDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             mypDialog.setMessage("init...");
             mypDialog.setCanceledOnTouchOutside(false);

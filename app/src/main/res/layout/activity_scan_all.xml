@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
-        android:text="Scan Products"
+        android:text="Scan All Products"
         android:textColor="@color/colorWhite"
         android:textStyle="bold"
         android:textSize="16dp"

@@ -18,12 +18,14 @@ import id.toriq.project.R;
 import id.toriq.project.helper.Constant;
 import id.toriq.project.helper.Utils;
 import id.toriq.project.ui.historyActivity.HistoryActivity;
+import id.toriq.project.ui.productActivity.CompareActivity;
 import id.toriq.project.ui.productActivity.ProductActivity;
 import id.toriq.project.ui.scanActivity.RegActivity;
 import id.toriq.project.ui.scanActivity.ScanActivity;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import id.toriq.project.ui.scanActivity.ScanAllActivity;
 import id.toriq.project.ui.scanActivity.WriteTagFragment;
 
 public class DashboardActivity extends AppCompatActivity {
@@ -53,16 +55,10 @@ public class DashboardActivity extends AppCompatActivity {
         return ft;
     }
 
-    @OnClick({R.id.btnQr, R.id.btnInfo, R.id.btnHistory, R.id.logout})
+    @OnClick({R.id.btnQr, R.id.btnInfo, R.id.btnHistory, R.id.btnAll, R.id.logout})
     public void onBtnClick(View view) {
         switch (view.getId()) {
             case R.id.btnQr:
-//                try {
-//                    WriteTagFragment newFragment = new WriteTagFragment();
-//                    newFragment.show(getDialogFragment(), "dialog_fragment_teacher_detail");
-//                } catch (Exception e) {
-//                    Utils.ToastMessage(getApplicationContext(), "dialog teacher detail error");
-//                }
                 Intent im = new Intent(this, RegActivity.class);
                 startActivity(im);
                 break;
@@ -73,6 +69,10 @@ public class DashboardActivity extends AppCompatActivity {
             case R.id.btnInfo:
                 Intent i = new Intent(this, ProductActivity.class);
                 startActivity(i);
+                break;
+            case R.id.btnAll:
+                Intent is = new Intent(this, ScanAllActivity.class);
+                startActivity(is);
                 break;
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();

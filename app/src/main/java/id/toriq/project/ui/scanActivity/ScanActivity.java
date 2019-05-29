@@ -52,7 +52,9 @@ public class ScanActivity extends KeyDown {
     RecyclerView scanList;
 
     @BindView(R.id.btnScan)
-    MaterialButton BtInventory;
+    MaterialButton btScan;
+    @BindView(R.id.btnStop)
+    MaterialButton btStop;
 
     @BindView(R.id.txt_date)
     TextView txtDate;
@@ -103,7 +105,7 @@ public class ScanActivity extends KeyDown {
     }
 
     @OnClick(R.id.btnScan)
-    public void onScan() {
+    public void onBtnScan() {
         readTag();
 
 //        String[] title = {
@@ -114,14 +116,19 @@ public class ScanActivity extends KeyDown {
 //                "E200001A310102152240C28F",
 //                "E200001A310102152290C293",
 //                "E200001A310102152390C2C7",
-//                "E200001A310102152460C2DB",
-//                "E200001A310102152560C30F",
-//                "E200001A310102152570C303"
+//                "E28011700000020A88114AE6",
+//                "E28011700000020A88114BE4",
+//                "E28011700000020A881142F9"
 //        };
 //        for (int i = 0; i < title.length; i++) {
 //            displayData(title[i]);
 //
 //        }
+    }
+
+    @OnClick(R.id.btnStop)
+    public void onBtnStop() {
+        stopInventory();
     }
 
     @OnClick(R.id.btnClear)
@@ -250,8 +257,8 @@ public class ScanActivity extends KeyDown {
         ArrayList<String> value = new ArrayList<>();
         value.add(data.getRfid());
         value.add(data.getKodeArtikel());
-        value.add(data.getLastUpdate());
         value.add(data.getUkuran());
+        value.add(data.getLastUpdate());
         value.add(data.getPetugas());
 
         return value;
@@ -260,9 +267,9 @@ public class ScanActivity extends KeyDown {
 
     private void readTag() {
         if (mReader.startInventoryTag(0, 0)) {
-            BtInventory.setText("Tap to Stop");
-            BtInventory.setIconTint(getResources().getColorStateList(R.color.colorRed));
             loopFlag = true;
+            btScan.setVisibility(View.INVISIBLE);
+            btStop.setVisibility(View.VISIBLE);
             new TagThread().start();
         } else {
             mReader.stopInventory();
@@ -271,14 +278,11 @@ public class ScanActivity extends KeyDown {
     }
 
     private void stopInventory() {
-        if (loopFlag) {
+        if(loopFlag){
             loopFlag = false;
-            if (mReader.stopInventory()) {
-                BtInventory.setText("Tap to Scan");
-                BtInventory.setIconTint(getResources().getColorStateList(R.color.colorAccent));
-            } else {
-                Toast.makeText(this, "fail", Toast.LENGTH_LONG).show();
-            }
+            btScan.setVisibility(View.VISIBLE);
+            btStop.setVisibility(View.INVISIBLE);
+            mReader.stopInventory();
         }
     }
 
